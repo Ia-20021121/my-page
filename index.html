@@ -1,87 +1,324 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>はじめまして</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>障害対応ランブック（サンプル）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E141B; --bg-2:#131B24; --surface:#18222D; --surface-2:#1E2A37;
+    --border:#2A3845; --border-2:#34465680;
+    --text:#E7EEF4; --muted:#8DA0B0; --faint:#5E7283;
+    --sev1:#FF5A4D; --sev1-dim:rgba(255,90,77,.12);
+    --sev2:#FFB23E; --sev2-dim:rgba(255,178,62,.12);
+    --sev3:#36CFB0; --sev3-dim:rgba(54,207,176,.12);
+    --accent:#5AA9F0; --accent-dim:rgba(90,169,240,.12);
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--text);font-family:var(--body);
+    line-height:1.7;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(900px 500px at 85% -10%,rgba(90,169,240,.07),transparent 60%);
+    min-height:100vh;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
 
-    body {
-      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  /* ---- Header ---- */
+  header{border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg-2),transparent)}
+  .top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px;padding:40px 0 34px}
+  .brand .eyebrow{color:var(--sev1)}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,4.5vw,3rem);letter-spacing:-.01em;line-height:1.08;margin:10px 0 6px}
+  .brand p{color:var(--muted);max-width:42ch;font-size:.95rem}
+  .status{font-family:var(--mono);font-size:.8rem;text-align:right;line-height:2.1;color:var(--muted)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--sev3);margin-right:7px;box-shadow:0 0 0 3px var(--sev3-dim);vertical-align:middle}
+  .status b{color:var(--text);font-weight:600}
+  .sample-tag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--accent);border:1px solid var(--border);background:var(--accent-dim);padding:3px 9px;border-radius:999px;margin-top:14px}
 
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 60px 80px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-      max-width: 560px;
-      width: 90%;
-    }
+  section{padding:56px 0}
+  section + section{border-top:1px solid var(--border)}
+  .shead{display:flex;align-items:baseline;gap:16px;margin-bottom:30px}
+  .shead .num{font-family:var(--mono);font-size:.8rem;color:var(--faint);padding-top:4px}
+  .shead h2{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:-.01em}
+  .shead p{color:var(--muted);font-size:.9rem;margin-top:4px}
 
-    .avatar {
-      width: 90px;
-      height: 90px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border-radius: 50%;
-      margin: 0 auto 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-    }
+  /* ---- Severity cards ---- */
+  .sev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .sev{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--c);border-radius:12px;padding:22px}
+  .sev .lvl{font-family:var(--mono);font-weight:600;font-size:1.05rem;color:var(--c);letter-spacing:.04em}
+  .sev .name{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:14px}
+  .sev .target{font-family:var(--mono);font-size:.82rem;color:var(--text);background:var(--cd);border-radius:7px;padding:8px 11px;display:inline-block;margin-bottom:14px}
+  .sev ul{list-style:none;font-size:.86rem;color:var(--muted)}
+  .sev li{padding-left:16px;position:relative;margin-bottom:5px}
+  .sev li::before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:var(--c)}
+  .sev1{--c:var(--sev1);--cd:var(--sev1-dim)} .sev2{--c:var(--sev2);--cd:var(--sev2-dim)} .sev3{--c:var(--sev3);--cd:var(--sev3-dim)}
 
-    h1 {
-      font-size: 2rem;
-      color: #333;
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
+  /* ---- Flow ---- */
+  .flow{position:relative;padding-left:14px}
+  .flow::before{content:"";position:absolute;left:21px;top:14px;bottom:14px;width:2px;background:linear-gradient(180deg,var(--sev1),var(--sev2),var(--sev3),var(--accent))}
+  .step{position:relative;display:flex;gap:22px;padding:0 0 26px 0}
+  .step:last-child{padding-bottom:0}
+  .node{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--surface-2);border:2px solid var(--border);display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:.95rem;color:var(--text);z-index:1}
+  .step.hot .node{border-color:var(--sev1);color:var(--sev1);box-shadow:0 0 0 4px var(--sev1-dim)}
+  .scard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px 19px;flex:1}
+  .scard h3{font-family:var(--display);font-weight:600;font-size:1.05rem;margin-bottom:3px}
+  .scard p{color:var(--muted);font-size:.9rem}
+  .scard .meta{font-family:var(--mono);font-size:.72rem;color:var(--accent);letter-spacing:.06em;margin-top:8px}
+  .scard .meta.warn{color:var(--sev1)}
 
-    .subtitle {
-      font-size: 1rem;
-      color: #888;
-      line-height: 1.8;
-    }
+  /* ---- Contacts ---- */
+  .tbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:.9rem}
+  .tbl th,.tbl td{text-align:left;padding:13px 18px;border-bottom:1px solid var(--border)}
+  .tbl th{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);background:var(--bg-2)}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td.role{font-weight:600;color:var(--text)}
+  .tbl td.mono{font-family:var(--mono);color:var(--muted);font-size:.84rem}
+  .note{font-family:var(--mono);font-size:.74rem;color:var(--sev2);background:var(--sev2-dim);border:1px solid var(--border);border-radius:9px;padding:11px 15px;margin-top:16px;display:flex;gap:9px;align-items:center}
 
-    .divider {
-      width: 50px;
-      height: 3px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      border-radius: 2px;
-      margin: 24px auto;
-    }
+  /* ---- Runbooks ---- */
+  details{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:13px;overflow:hidden}
+  details[open]{border-color:var(--border-2)}
+  summary{cursor:pointer;list-style:none;padding:17px 20px;display:flex;align-items:center;gap:14px;font-weight:600;font-family:var(--display)}
+  summary::-webkit-details-marker{display:none}
+  summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .pill{font-family:var(--mono);font-size:.66rem;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:999px;color:var(--p);background:var(--pd);border:1px solid currentColor;flex:0 0 auto}
+  .chev{margin-left:auto;color:var(--faint);transition:transform .2s ease}
+  details[open] .chev{transform:rotate(90deg)}
+  .rb-body{padding:4px 20px 22px;border-top:1px solid var(--border)}
+  .rb-body h4{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:18px 0 8px}
+  .rb-body ol,.rb-body ul{padding-left:20px;color:var(--muted);font-size:.9rem}
+  .rb-body li{margin-bottom:5px}
+  .cmd{position:relative;font-family:var(--mono);font-size:.82rem;background:#0A1017;border:1px solid var(--border);border-radius:8px;padding:12px 46px 12px 14px;margin:8px 0;color:#CFE3F5;white-space:pre-wrap;word-break:break-all}
+  .cmd .copy{position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:.66rem;color:var(--faint);background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer}
+  .cmd .copy:hover{color:var(--text);border-color:var(--accent)}
 
-    .badge {
-      display: inline-block;
-      background: #f0edff;
-      color: #764ba2;
-      font-size: 0.85rem;
-      padding: 6px 18px;
-      border-radius: 20px;
-      margin-top: 24px;
-      font-weight: 600;
-    }
-  </style>
+  /* ---- Checklist ---- */
+  .check{display:grid;grid-template-columns:1fr 1fr;gap:11px 22px}
+  .check label{display:flex;gap:11px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;font-size:.9rem;color:var(--muted)}
+  .check input{accent-color:var(--accent);width:17px;height:17px;margin-top:2px;flex:0 0 auto}
+  .check input:checked + span{color:var(--faint);text-decoration:line-through}
+
+  footer{border-top:1px solid var(--border);padding:34px 0 50px;color:var(--faint);font-size:.82rem}
+  footer .mono{font-family:var(--mono);font-size:.74rem;line-height:1.9}
+  footer code{font-family:var(--mono);color:var(--accent);background:var(--accent-dim);padding:2px 6px;border-radius:5px}
+
+  @media (max-width:720px){
+    .sev-grid{grid-template-columns:1fr}
+    .check{grid-template-columns:1fr}
+    .top{align-items:flex-start}
+    .status{text-align:left}
+    section{padding:42px 0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
-  <div class="card">
-    <div class="avatar">👋</div>
-    <h1>はじめまして！</h1>
-    <div class="divider"></div>
-    <p class="subtitle">これは私の最初のWebページです。<br>ここから少しずつ学んでいきます。</p>
-    <span class="badge">My First Web Page</span>
+
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <span class="eyebrow">Incident Response · Runbook</span>
+      <h1>障害対応ランブック</h1>
+      <p>オンコール担当者向けの一次対応ガイド。障害発生時は上から順に追ってください。</p>
+      <span class="sample-tag">※ 本ページの連絡先・コマンド・しきい値はすべて架空のサンプルです</span>
+    </div>
+    <div class="status">
+      <span class="dot"></span><b>運用正常</b><br>
+      現在時刻 <span id="clock">--:--:--</span><br>
+      最終更新 2026-06-20
+    </div>
   </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. Severity -->
+  <section id="severity">
+    <div class="shead">
+      <span class="num">01</span>
+      <div><h2>重大度の判定</h2><p>まず影響範囲から重大度を決める。判定で対応速度と連絡範囲が変わる。</p></div>
+    </div>
+    <div class="sev-grid">
+      <div class="sev sev1">
+        <div class="lvl">SEV-1</div><div class="name">Critical</div>
+        <div class="target">一次応答 15分以内</div>
+        <ul><li>主要サービスが全面停止</li><li>広範なユーザー影響・売上影響</li><li>データ消失・情報漏えいの恐れ</li></ul>
+      </div>
+      <div class="sev sev2">
+        <div class="lvl">SEV-2</div><div class="name">High</div>
+        <div class="target">1時間以内に着手</div>
+        <ul><li>一部機能の停止・性能劣化</li><li>回避策はあるが影響が継続</li><li>一部ユーザーに影響</li></ul>
+      </div>
+      <div class="sev sev3">
+        <div class="lvl">SEV-3</div><div class="name">Low</div>
+        <div class="target">翌営業日まで対応可</div>
+        <ul><li>軽微・限定的な不具合</li><li>明確な回避策あり</li><li>ユーザー影響はほぼなし</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Flow -->
+  <section id="flow">
+    <div class="shead">
+      <span class="num">02</span>
+      <div><h2>対応フロー</h2><p>検知から振り返りまでの基本の流れ。SEV-1はステップ4を待たず並行でエスカレーションする。</p></div>
+    </div>
+    <div class="flow">
+      <div class="step"><div class="node">1</div><div class="scard"><h3>検知</h3><p>監視アラートまたは問い合わせで覚知。<b>発生時刻を記録</b>し、専用チャンネルを開設する。</p><div class="meta">記録: 発生時刻 / 検知元 / 初期症状</div></div></div>
+      <div class="step"><div class="node">2</div><div class="scard"><h3>初動・トリアージ</h3><p>影響範囲（対象サービス・ユーザー数・データ）を素早く確認する。むやみに本番を触らない。</p><div class="meta">確認: 影響範囲 / 直近の変更・デプロイ</div></div></div>
+      <div class="step hot"><div class="node">3</div><div class="scard"><h3>重大度の判定</h3><p>セクション01の基準でSEV-1/2/3を確定。<b>SEV-1なら直ちに次へ。</b></p><div class="meta warn">SEV-1: 判定と同時にエスカレーション開始</div></div></div>
+      <div class="step"><div class="node">4</div><div class="scard"><h3>エスカレーション</h3><p>インシデント指揮者（IC）を立て、必要な関係者を招集。役割（対応・記録・対外連絡）を分担する。</p><div class="meta">立てる: IC / 記録係 / 連絡係</div></div></div>
+      <div class="step"><div class="node">5</div><div class="scard"><h3>復旧対応</h3><p>原因究明より<b>暫定復旧を優先</b>。該当ランブック（セクション04）に沿って手を打つ。実施内容は逐次記録。</p><div class="meta">優先: 影響の止血 → 暫定復旧</div></div></div>
+      <div class="step"><div class="node">6</div><div class="scard"><h3>復旧確認</h3><p>監視指標とユーザー影響が解消したか確認。関係者・利用者へ復旧を周知する。</p><div class="meta">確認: 指標が正常 / 再発なし</div></div></div>
+      <div class="step"><div class="node">7</div><div class="scard"><h3>振り返り（ポストモーテム）</h3><p>個人を責めない（Blameless）前提で原因と再発防止策を整理。改善タスクは期限つきで起票する。</p><div class="meta">作成: 時系列 / 根本原因 / 再発防止</div></div></div>
+    </div>
+  </section>
+
+  <!-- 3. Escalation -->
+  <section id="escalation">
+    <div class="shead">
+      <span class="num">03</span>
+      <div><h2>エスカレーション連絡先</h2><p>上から順に連絡。15分応答がなければ次の段へ上げる。</p></div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>役割</th><th>担当（サンプル）</th><th>連絡手段</th><th>担当範囲</th></tr></thead>
+      <tbody>
+        <tr><td class="role">一次対応 / オンコール</td><td>山田 太郎</td><td class="mono">#incident / 内線0000</td><td>初動・トリアージ</td></tr>
+        <tr><td class="role">二次 / リードエンジニア</td><td>佐藤 花子</td><td class="mono">lead@example.com</td><td>技術判断・復旧主導</td></tr>
+        <tr><td class="role">インシデント指揮者(IC)</td><td>鈴木 一郎</td><td class="mono">内線0001</td><td>全体統括・意思決定</td></tr>
+        <tr><td class="role">対外・顧客連絡</td><td>田中 美咲</td><td class="mono">pr@example.com</td><td>顧客/広報への周知</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><span>⚠</span><span>上記はすべて架空の名前・連絡先です。実運用では本物の情報を公開リポジトリに置かず、社内の非公開環境で管理してください。</span></div>
+  </section>
+
+  <!-- 4. Runbooks -->
+  <section id="runbooks">
+    <div class="shead">
+      <span class="num">04</span>
+      <div><h2>個別ランブック</h2><p>症状から該当項目を開く。コマンドはダミー。実環境のものに置き換えて使う想定。</p></div>
+    </div>
+
+    <details>
+      <summary><span class="pill" style="--p:var(--sev1);--pd:var(--sev1-dim)">SEV-1/2</span> Webサーバーが応答しない（5xx / タイムアウト）<span class="chev">›</span></summary>
+      <div class="rb-body">
+        <h4>症状</h4>
+        <ul><li>監視のHTTPチェックが連続失敗</li><li>5xxエラー率の急増・応答遅延</li></ul>
+        <h4>確認</h4>
+        <ul><li>プロセス・ヘルスチェックの状態</li><li>CPU / メモリ / コネクション数</li><li>直近のデプロイや設定変更の有無</li></ul>
+        <div class="cmd">systemctl status web.service
+curl -I https://service.example.com/healthz</div>
+        <h4>一次対応</h4>
+        <ol><li>異常ノードをロードバランサから切り離す</li><li>プロセスを再起動して復旧を確認</li><li>直近デプロイが原因ならロールバック</li></ol>
+        <h4>エスカレーション基準</h4>
+        <ul><li>10分で復旧しない、または全ノード影響 → SEV-1としてICへ</li></ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="pill" style="--p:var(--sev1);--pd:var(--sev1-dim)">SEV-1</span> データベース接続エラー<span class="chev">›</span></summary>
+      <div class="rb-body">
+        <h4>症状</h4>
+        <ul><li>"connection refused" / "too many connections"</li><li>書き込み系処理が広範に失敗</li></ul>
+        <h4>確認</h4>
+        <ul><li>DBプロセスの稼働とディスク空き</li><li>接続数が上限に達していないか</li><li>レプリケーション遅延</li></ul>
+        <div class="cmd">SHOW STATUS LIKE 'Threads_connected';
+SHOW PROCESSLIST;</div>
+        <h4>一次対応</h4>
+        <ol><li>長時間ロック・暴走クエリを特定して停止</li><li>接続枯渇ならアプリ側のコネクション設定を見直す</li><li>必要に応じて読み取りをレプリカへ退避</li></ol>
+        <h4>エスカレーション基準</h4>
+        <ul><li>プライマリ停止やデータ不整合の恐れ → 即SEV-1・ICとDBA招集</li></ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="pill" style="--p:var(--sev2);--pd:var(--sev2-dim)">SEV-2</span> ディスク容量の逼迫<span class="chev">›</span></summary>
+      <div class="rb-body">
+        <h4>症状</h4>
+        <ul><li>使用率90%超のアラート</li><li>書き込み失敗・ログ出力停止</li></ul>
+        <h4>確認</h4>
+        <div class="cmd">df -h
+du -sh /var/log/* | sort -rh | head</div>
+        <h4>一次対応</h4>
+        <ol><li>肥大化したログ・一時ファイルを退避/削除</li><li>ローテーション設定を確認・修正</li><li>恒久対応としてボリューム拡張を起票</li></ol>
+        <h4>エスカレーション基準</h4>
+        <ul><li>削減しても98%超が続く → SEV-1へ引き上げ</li></ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="pill" style="--p:var(--sev2);--pd:var(--sev2-dim)">SEV-2/3</span> TLS証明書の期限切れ<span class="chev">›</span></summary>
+      <div class="rb-body">
+        <h4>症状</h4>
+        <ul><li>ブラウザで証明書エラー</li><li>API連携がTLS検証で失敗</li></ul>
+        <h4>確認</h4>
+        <div class="cmd">echo | openssl s_client -connect service.example.com:443 2>/dev/null | openssl x509 -noout -dates</div>
+        <h4>一次対応</h4>
+        <ol><li>証明書を再発行・更新して反映</li><li>全ノード/ロードバランサへ確実に配布</li><li>自動更新（ACME等）の失敗原因を確認</li></ol>
+        <h4>エスカレーション基準</h4>
+        <ul><li>本番の主要ドメインが影響 → SEV-2、顧客影響が広ければSEV-1</li></ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- 5. Checklist -->
+  <section id="checklist">
+    <div class="shead">
+      <span class="num">05</span>
+      <div><h2>オンコール開始前チェック</h2><p>当番に入る前に確認しておくと初動が速くなる。</p></div>
+    </div>
+    <div class="check">
+      <label><input type="checkbox"><span>VPN・本番アクセス権が有効か</span></label>
+      <label><input type="checkbox"><span>監視ダッシュボードをブックマーク</span></label>
+      <label><input type="checkbox"><span>インシデント用チャットに参加済み</span></label>
+      <label><input type="checkbox"><span>呼び出し（電話/ページャ）の受信確認</span></label>
+      <label><input type="checkbox"><span>直近のデプロイ・変更を把握</span></label>
+      <label><input type="checkbox"><span>エスカレーション先の連絡手段を確認</span></label>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="mono">
+      INCIDENT RESPONSE RUNBOOK · SAMPLE / DUMMY DATA<br>
+      このページは学習用の見本です。実際の運用では <code>index.html</code> を編集し、<br>
+      ブランチを切って Pull Request 経由で更新する流れを試してみてください。
+    </p>
+  </div>
+</footer>
+
+<script>
+  // 現在時刻（ヘッダー表示用）
+  const clock = document.getElementById('clock');
+  function tick(){
+    const n = new Date();
+    const p = x => String(x).padStart(2,'0');
+    clock.textContent = `${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`;
+  }
+  tick(); setInterval(tick, 1000);
+
+  // コマンドのコピー
+  document.querySelectorAll('.cmd').forEach(block => {
+    const btn = document.createElement('button');
+    btn.className = 'copy'; btn.textContent = 'copy'; btn.type = 'button';
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(block.textContent.replace('copy','').trim());
+        btn.textContent = 'done'; setTimeout(() => btn.textContent = 'copy', 1200);
+      } catch { btn.textContent = '—'; }
+    });
+    block.appendChild(btn);
+  });
+</script>
 </body>
 </html>
